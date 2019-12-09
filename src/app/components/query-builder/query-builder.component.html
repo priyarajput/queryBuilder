@@ -1,0 +1,28 @@
+<ng-container>
+    <button (click)="addRule()">+ Rule</button>
+    <button (click)="addRuleSet()">+ Ruleset</button>
+    <button (click)="removeRuleSet()">- Ruleset</button>
+</ng-container>
+
+<ng-container>
+    <ul *ngIf="data && data.rules">
+        <ng-container *ngFor="let rule of data.rules;let i=index">
+            <li>
+                <ng-container *ngIf="!(!!rule.rules)">
+                    <label>{{rule.field}} : </label>
+                    <input [(ngModel)]="rule.value" type="text">
+                </ng-container>
+                <app-query-builder [data]="rule" [config]="config" *ngIf="rule.rules">
+                </app-query-builder>
+                <ng-container *ngIf="rule.rules && rule.rules.length === 0 ">
+                    <ng-container *ngTemplateOutlet="templateRef; context: getEmptyWarningContext()"></ng-container>
+                </ng-container>
+                <ng-template #templateRef let-default>
+                    <p>
+                        {{default}}
+                    </p>
+                </ng-template>
+            </li>
+        </ng-container>
+    </ul>
+</ng-container>
