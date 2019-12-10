@@ -1,21 +1,28 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-query-builder',
   templateUrl: './query-builder.component.html',
   styleUrls: ['./query-builder.component.scss']
 })
-export class QueryBuilderComponent implements OnInit {
+export class QueryBuilderComponent implements OnChanges, OnInit {
   @Input() data = { rules: [] }
   @Input() config = { fields: {} }
+  @Input() allowRuleset: boolean = false;
+  @Input() parentData = this.data;
+
   public fields = {};
 
-  constructor() { }
+  constructor() {
+  }
+
 
   ngOnInit() {
+    console.log("ng on init")
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log("ng On change")
     const config = this.config;
     const type = typeof config;
     if (type === 'object') {
@@ -27,18 +34,24 @@ export class QueryBuilderComponent implements OnInit {
     }
   }
 
+
+  addRandomId(): number {
+    return Math.floor(Math.random() * 100);
+  }
+
   addRule(): void {
+    const addRandomId = this.addRandomId();
     let parent = this.data;
     const field = this.fields[0];
-    console.log("parent", parent, field)
     parent.rules = parent.rules.concat([{
-      field: field.field,
-      value: field.value
+      field: field.field + " " + addRandomId,
+      value: field.value + " " + addRandomId
     }]);
   }
 
-  removeRule() {
+  removeRule(rule): void {
     let parent = this.data;
+    parent.rules = parent.rules.filter((value, index) => index != rule);
   }
 
   addRuleSet(): void {
@@ -48,9 +61,11 @@ export class QueryBuilderComponent implements OnInit {
   }
 
   removeRuleSet(): void {
+    let parent = this.parentData;
+    parent.rules = parent.rules.filter(r => r !== this.data)
   }
 
-  getEmptyWarningContext() {
+  getEmptyWarningContext(): object {
     return {
       $implicit: "A ruleset cannot be empty. Please add a rule or remove it all together."
     };

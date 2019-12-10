@@ -1,7 +1,7 @@
 <ng-container>
     <button (click)="addRule()">+ Rule</button>
     <button (click)="addRuleSet()">+ Ruleset</button>
-    <button (click)="removeRuleSet()">- Ruleset</button>
+    <button (click)="removeRuleSet()" *ngIf="allowRuleset">- Ruleset</button>
 </ng-container>
 
 <ng-container>
@@ -11,16 +11,16 @@
                 <ng-container *ngIf="!(!!rule.rules)">
                     <label>{{rule.field}} : </label>
                     <input [(ngModel)]="rule.value" type="text">
+                    <button (click)="removeRule(i)">- Rule</button>
                 </ng-container>
-                <app-query-builder [data]="rule" [config]="config" *ngIf="rule.rules">
+                <app-query-builder [data]="rule" [config]="config" 
+                [parentData]="data" [allowRuleset]="true" *ngIf="rule.rules">
                 </app-query-builder>
                 <ng-container *ngIf="rule.rules && rule.rules.length === 0 ">
                     <ng-container *ngTemplateOutlet="templateRef; context: getEmptyWarningContext()"></ng-container>
                 </ng-container>
                 <ng-template #templateRef let-default>
-                    <p>
-                        {{default}}
-                    </p>
+                    <p> {{default}} </p>
                 </ng-template>
             </li>
         </ng-container>
