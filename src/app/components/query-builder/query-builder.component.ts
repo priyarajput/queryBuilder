@@ -13,6 +13,8 @@ export class QueryBuilderComponent implements OnChanges, OnInit {
   @ViewChildren('attendee') attendeeInputs: QueryList<ElementRef>;
   @Output() getId = new EventEmitter<any>();
 
+  charAt = 0;
+
   setId = 0;
 
   public fields = {};
@@ -82,40 +84,36 @@ export class QueryBuilderComponent implements OnChanges, OnInit {
     };
   }
 
-  onClick(event: string, field?: object) {
-    console.log(field, event, this.data)
-    this.setId = field['id'];
-    console.log("id", this.setId);
-
-    this.getId.emit(this.setId);
-  }
-
   valueChange(e) {
-    console.log("valueChange", e);
-    this.setId = e;
-    this.getId.emit(this.setId);
-    // this.attendeeInputs.forEach((s: ElementRef, i) => {
-    //   console.log(s.nativeElement, i)
-    //   // this.renderer.setElementStyle(s.nativeElement, "background", "yellow");
-    //   // this.renderer.setProperty(this.zipEl.nativeElement, 'value', '94085');
-    // });
+    this.setId = e.setId;
+    this.charAt = e.charAt
 
+    const d = {
+      charAt: this.charAt,
+      setId: this.setId
+    }
+    this.getId.emit(d);
   }
+
   updateValue() {
-    console.log("updateValue", this.setId);
     this.search(this.data.rules);
-    this.attendeeInputs.forEach((s: ElementRef, i) => {
-      // console.log(s.nativeElement, i)
-      this.renderer.setElementStyle(s.nativeElement, "background", "yellow");
-      // this.renderer.setProperty(this.zipEl.nativeElement, 'value', '94085');
-    });
+  }
+
+  myFunction(e) {
+    this.setId = e.data.id;
+    this.charAt = e.pos;
+    const d = {
+      charAt: this.charAt,
+      setId: this.setId
+    }
+    this.getId.emit(d);
   }
 
   search(rules) {
     rules.forEach((element, index) => {
       if (element.id === this.setId) {
-        console.log("found", element);
-        element.value = "Update some text" + this.addRandomId();
+        element.value = [element.value.slice(0, this.charAt),
+        "Update some text" + this.addRandomId(), element.value.slice(this.charAt)].join('');
         return false
       }
       if (element.rules) {

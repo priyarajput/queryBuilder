@@ -5,15 +5,13 @@
     <button (click)="updateValue()" *ngIf="!allowRuleset">Change</button>
 </ng-container>
 
-
-
 <ng-container>
     <ul *ngIf="data && data.rules">
         <ng-container *ngFor="let rule of data.rules;let i=index">
             <li *ngIf="{ruleSet: rule.rules} as local">
                 <ng-container *ngIf="!(!!local.ruleSet)">
                     <label>{{rule.field}} : </label>
-                    <input [(ngModel)]="rule.value" type="text" (blur)="onClick(allowRuleset,rule)" #attendee>
+                    <input [(ngModel)]="rule.value" type="text" input [data]="rule" (onFocusOut)='myFunction($event)'>
                     <button (click)="removeRule(i)">- Rule</button>
                 </ng-container>
                 <app-query-builder [data]="rule" [config]="config" [parentData]="data.rules" [allowRuleset]="true"
