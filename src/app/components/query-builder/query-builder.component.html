@@ -15,7 +15,7 @@
                     <button (click)="removeRule(i)">- Rule</button>
                 </ng-container>
                 <app-query-builder [data]="rule" [config]="config" [parentData]="data.rules" [allowRuleset]="true"
-                    (getId)="valueChange($event)" *ngIf="local.ruleSet">
+                    [indexRuleSet]="i" (getId)="valueChange($event)" *ngIf="local.ruleSet">
                 </app-query-builder>
                 <ng-container *ngIf="local.ruleSet && local.ruleSet.length === 0 ">
                     <ng-container *ngTemplateOutlet="templateRef; context: getEmptyWarningContext()"></ng-container>
